@@ -29,6 +29,7 @@ jobs:
       run: git config --local user.name "nakano57-bot"
       run: git add menu.csv
       run: git commit -m "Update data"
+    - name: Push
       uses: ad-m/github-push-action@v0.6.0
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
