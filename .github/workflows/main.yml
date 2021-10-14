@@ -25,11 +25,10 @@ jobs:
       run: |
           python3 get_menu.py
     - name: Deply
-    steps:
-        - run: git config --local user.email "nakano57@users.noreply.github.com"
-        - run: git config --local user.name "nakano57-bot"
-        - run: git add menu.csv
-        - run: git commit -m "Update data"
-        - uses: ad-m/github-push-action@v0.6.0
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
+      run: git config --local user.email "nakano57@users.noreply.github.com"
+      run: git config --local user.name "nakano57-bot"
+      run: git add menu.csv
+      run: git commit -m "Update data"
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
