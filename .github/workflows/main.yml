@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      - uses: actions/checkout@v2
+      uses: actions/checkout@v2
     - name: Setup Python 3.9
       uses: actions/setup-python@v1
       with:
@@ -22,7 +22,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run script
-      - run: python3 get_menu.py
+      run: |
+          python3 get_menu.py
     - name: Deply
         - run: git config --local user.email "nakano57@users.noreply.github.com"
         - run: git config --local user.name "nakano57-bot"
