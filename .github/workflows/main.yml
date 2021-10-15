@@ -2,7 +2,7 @@ name: main
 
 on:
   schedule:
-    - cron: "0 0 * * MON,TUE,WED,THU,FRI"
+    - cron: "0 0 * * *"
   push:
     paths-ignore:
       - "docs/**"
