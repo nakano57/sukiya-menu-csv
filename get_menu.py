@@ -17,6 +17,8 @@ menu_urls = []
 for item in lnav.find_all('dd', class_='hd'):
     menu_urls.append(base+item.find('a').get('href'))
 
+menu_urls = [x for x in menu_urls if not ('out' in x)]
+
 
 urls = []
 for url in menu_urls:
