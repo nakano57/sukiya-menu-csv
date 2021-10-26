@@ -1,0 +1,2 @@
+token = 'DEV-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+endpoint = 'https://cloud.dwavesys.com/sapi'
