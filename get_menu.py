@@ -11,7 +11,7 @@ base = "https://www.sukiya.jp/"
 url = "https://www.sukiya.jp/menu/in/gyudon/"
 res = requests.get(url)
 soup = BeautifulSoup(res.text, 'html.parser')
-lnav = soup.find(id='lnav_menu_in')
+lnav = soup.find(id='local_nav').find('dl')
 
 menu_urls = []
 for item in lnav.find_all('dd', class_='hd'):
