@@ -17,6 +17,7 @@ sodium = np.loadtxt(filename, delimiter=',', dtype='float', usecols=7)
 # 定数設定
 N_MENU = len(name)  # メニューの総数
 P_MAX = 1000  # 最大注文料金
+C_MAX = 320  # 最大炭水化物量
 
 ######################## PHASE 1 ########################
 # モデルの記述・実行
@@ -34,6 +35,9 @@ model.set_objective(-quicksum(cal[i]*x[i]
 # 制約を追加
 model.add_constraint(quicksum(price[i]*x[i]
                               for i in range(N_MENU)) <= P_MAX)
+
+model.add_constraint(quicksum(carbohydrate[i]*x[i]
+                              for i in range(N_MENU)) <= C_MAX)
 
 # モデルの実行
 sampler = LeapHybridCQMSampler(endpoint=dkey.endpoint,
@@ -57,4 +61,3 @@ print("総タンパク質: {}g.".format(np.dot(protein, b)))
 print("総脂質: {}g.".format(np.dot(fat, b)))
 print("総炭水化物: {}g.".format(np.dot(carbohydrate, b)))
 print("総塩分: {}g.".format(np.dot(sodium, b)))
-print("計算時間: %f sec." % model.Runtime)
