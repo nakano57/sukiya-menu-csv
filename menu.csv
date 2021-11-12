@@ -1,4 +1,4 @@
-#menu name,category,price,kcal,protein,fat,carbohydrate,sodium
+#menu_name,category,price,kcal,protein,fat,carbohydrate,sodium
 牛すき鍋定食ごはんミニ,gyusuki,750,962,38.4,37.7,115.4,7.3
 牛すき鍋定食ごはん並盛,gyusuki,780,1100,40.7,38.2,146.7,7.3
 牛すき鍋定食ごはん大盛,gyusuki,810,1239,43.1,38.7,178,7.3
