@@ -51,7 +51,7 @@ for url in menu_urls:
 with open('menu.csv', 'w') as f:
     writer = csv.writer(f)
     # writer.writerow(['#Last Update:'+str(dt_now)])
-    writer.writerow(['#menu_name', 'category', 'price',
+    writer.writerow(['menu name', 'category', 'price',
                      'kcal', 'protein', 'fat', 'carbohydrate', 'sodium'])
 
     for u in urls:
