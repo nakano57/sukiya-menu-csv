@@ -1,8 +1,11 @@
+import traceback
 import requests
 import csv
+import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import datetime
+import traceback
 
 dt_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
 
@@ -48,11 +51,13 @@ for url in menu_urls:
 with open('menu.csv', 'w') as f:
     writer = csv.writer(f)
     writer.writerow(['#Last Update:'+str(dt_now)])
-    writer.writerow(['#menu_name', 'category', 'price', 'kcal'])
+    writer.writerow(['#menu_name', 'category', 'price',
+                     'kcal', 'protein', 'fat', 'carbohydrate', 'sodium'])
 
     for u in urls:
-        res = requests.get(u)
+        res = requests.get(u.replace('index.html', 'nutrient.html'))
         soup = BeautifulSoup(res.text, 'html.parser')
+
         base_menu_name = soup.find(
             'div', class_='heading hd_first').find('h1').text
         sec = soup.find('div', id='sec_dish_nums')
@@ -60,10 +65,34 @@ with open('menu.csv', 'w') as f:
         category = urlparse(u).path.split('/')[4]
         # print(category)
 
-        for n in sec.find_all('li', class_='clr'):
-            menu_name = base_menu_name + n.find('dt').get_text(strip=True)
-            price = n.find('dd', class_='price').find(
+        for clr, tr in zip(sec.find_all('li', class_='clr'), soup.find('table').find_all('tr')[1:]):
+            menu_name = base_menu_name + clr.find('dt').get_text(strip=True)
+            price = clr.find('dd', class_='price').find(
                 'em').get_text(strip=True)
-            kcal = int(n.find('dd', class_='calorie').get_text(
-                strip=True).strip('( kcal)').replace(',', ''))
-            writer.writerow([menu_name, category, price, kcal])
+
+            ###########名前CHECK############
+            if base_menu_name == tr.find('th').text.replace('（店内メニュー）', ''):
+                table_menu_name = base_menu_name
+            else:
+                table_menu_name = base_menu_name + \
+                    tr.find('th').text.replace('（店内メニュー）', '')
+
+            if table_menu_name != menu_name:
+                print(menu_name, table_menu_name)
+                try:
+                    raise Exception
+                except:
+                    traceback.print_exc()
+                    sys.exit(1)
+            ###########CHECKおわり############
+
+            td = tr.find_all('td')
+            if td:
+                kcal = td[0].text.rstrip(' kcal')
+                protein = td[1].text.rstrip(' g')
+                fat = td[2].text.rstrip(' g')
+                carbohydrate = td[3].text.rstrip(' g')
+                sodium = td[4].text.rstrip(' g')
+
+            writer.writerow([menu_name, category, price, kcal,
+                             protein, fat, carbohydrate, sodium])
