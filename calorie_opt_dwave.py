@@ -3,10 +3,16 @@ from dimod import ConstrainedQuadraticModel, Integer, Binary, quicksum
 from dwave.system import LeapHybridCQMSampler
 import dkey
 
+filename = 'menu.csv'
+
 # 必要情報（メニュー名・価格・カロリー）のインポート
-name = np.loadtxt('menu.csv', delimiter=',', dtype='unicode', usecols=0)
-p = np.loadtxt('menu.csv', delimiter=',', dtype='uint64', usecols=2)
-c = np.loadtxt('menu.csv', delimiter=',', dtype='uint64', usecols=3)
+name = np.loadtxt(filename, delimiter=',', dtype='unicode', usecols=0)
+price = np.loadtxt(filename, delimiter=',', dtype='uint64', usecols=2)
+cal = np.loadtxt(filename, delimiter=',', dtype='uint64', usecols=3)
+protein = np.loadtxt(filename, delimiter=',', dtype='float', usecols=4)
+fat = np.loadtxt(filename, delimiter=',', dtype='float', usecols=5)
+carbohydrate = np.loadtxt(filename, delimiter=',', dtype='float', usecols=6)
+sodium = np.loadtxt(filename, delimiter=',', dtype='float', usecols=7)
 
 # 定数設定
 N_MENU = len(name)  # メニューの総数
@@ -22,11 +28,11 @@ model = ConstrainedQuadraticModel()
 x = [Binary(f'x_{i}') for i in range(N_MENU)]
 
 # 目的関数を設定
-model.set_objective(-quicksum(c[i]*x[i]
+model.set_objective(-quicksum(cal[i]*x[i]
                               for i in range(N_MENU)))
 
 # 制約を追加
-model.add_constraint(quicksum(p[i]*x[i]
+model.add_constraint(quicksum(price[i]*x[i]
                               for i in range(N_MENU)) <= P_MAX)
 
 # モデルの実行
@@ -43,7 +49,12 @@ b = [raw_solution[f'x_{j}'] for j in range(N_MENU)]
 # 価値、荷重、荷物の選択を表示
 for i in range(N_MENU):
     if(b[i] == 1):
-        print("%s %dyen %dcal." % (name[i], p[i], c[i]))
+        print("%s %dyen %dcal." % (name[i], price[i], cal[i]))
 print()
-print("合計: {}yen".format(np.dot(p, b)))
-print("総カロリー: {}cal.".format(np.dot(c, b)))
+print("合計: {}yen".format(np.dot(price, b)))
+print("総カロリー: {}cal.".format(np.dot(cal, b)))
+print("総タンパク質: {}g.".format(np.dot(protein, b)))
+print("総脂質: {}g.".format(np.dot(fat, b)))
+print("総炭水化物: {}g.".format(np.dot(carbohydrate, b)))
+print("総塩分: {}g.".format(np.dot(sodium, b)))
+print("計算時間: %f sec." % model.Runtime)
