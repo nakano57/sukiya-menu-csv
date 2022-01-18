@@ -6,18 +6,19 @@ import datetime
 
 dt_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
 
-base = "https://www.sukiya.jp/"
+base = "https://www.sukiya.jp"
 
 url = "https://www.sukiya.jp/menu/in/gyudon/"
 res = requests.get(url)
 soup = BeautifulSoup(res.text, 'html.parser')
-lnav = soup.find(id='lnav_menu_in')
+lnav = soup.find(id='local_nav')
 
 menu_urls = []
 for item in lnav.find_all('dd', class_='hd'):
     menu_urls.append(base+item.find('a').get('href'))
 
 menu_urls = [x for x in menu_urls if not ('out' in x)]
+print(menu_urls)
 
 
 urls = []
@@ -52,12 +53,12 @@ with open('menu.csv', 'w') as f:
 
     for u in urls:
         res = requests.get(u)
-        soup = BeautifulSoup(res.text, 'html.parser')
+        soup = BeautifulSoup(res.content, 'html.parser')
         base_menu_name = soup.find(
             'div', class_='heading hd_first').find('h1').text
         sec = soup.find('div', id='sec_dish_nums')
 
-        category = urlparse(u).path.split('/')[4]
+        category = urlparse(u).path.split('/')[3]
         # print(category)
 
         for n in sec.find_all('li', class_='clr'):
